@@ -11,6 +11,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -58,23 +59,22 @@ public class Main {
 		Date fileDate = new Date(attr.lastModifiedTime().toMillis());
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yy");
 		
-		String basePath = iniFile.getParent() + "\\";
-		String nextPath = "\\" + dateFormat.format(fileDate);
+		String replaysFolderPath = iniFile.getParent() + "\\";
+		String datePath = "\\" + dateFormat.format(fileDate);
+		String concatedNames = playersName[0] + " Vs " + playersName[1];
 		
-		//create nickname/date folder and copy replays into it
-		for(String player : playersName) {
-			try {
-				new File(basePath + player).mkdir();
-				new File(basePath + player + nextPath).mkdir();
-				copyFiles(iniFile, basePath + player + nextPath);
-			} catch (InvalidPathException e) {
-				player = "Unknown Player";
-				new File(basePath + player).mkdir();
-				new File(basePath + player + nextPath).mkdir();
-				copyFiles(iniFile, basePath + player + nextPath);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		//Create nickname/date folder and copy replays into it
+		try {
+			new File(replaysFolderPath + concatedNames).mkdir(); //Create the players folder
+			new File(replaysFolderPath + concatedNames + datePath).mkdir(); //Create the date folder inside the players folder
+			copyFiles(iniFile, replaysFolderPath + concatedNames + datePath); //Copy replays files into date folder
+		} catch (InvalidPathException e) {
+			concatedNames = "Unknown Players";
+			new File(replaysFolderPath + concatedNames).mkdir();
+			new File(replaysFolderPath + concatedNames + datePath).mkdir();
+			copyFiles(iniFile, replaysFolderPath + concatedNames + datePath);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -91,7 +91,7 @@ public class Main {
 	protected static String[] getPlayersName(File file) throws FileNotFoundException {
 		String[] players = new String[2];
 		Scanner sc = new Scanner(file,"UTF-8");
-		
+
 		for(int i = 0; i < 2; i++) {
 			while(sc.hasNextLine()) {
 				players[i] = sc.nextLine();
@@ -99,9 +99,6 @@ public class Main {
 					players[i] = players[i].substring(7);
 					break;
 				}
-			}
-			if(players[i] == null) {
-				players[i] = "Unknown Player";
 			}
 		}
 		
@@ -111,7 +108,7 @@ public class Main {
 	
 	protected static String[] formatPlayersName(String[] players) {
 		String[] formattedPlayers = new String[2];
-		for(int i = 0; i < 2; i++) {			
+		for(int i = 0; i < 2; i++) {
 			formattedPlayers[i] = players[i]
 								.replace("/","༼")
 								.replace("\\","༽")
@@ -121,8 +118,10 @@ public class Main {
 								.replace(":", "╠")
 								.replace("?","¿")
 								.replace("*", "⋄")
-								.replace("\"", "'");
+								.replace("\"", "'")
+								.replace("", "ロ");
 		}
+		Arrays.sort(formattedPlayers); //put the players in alphabetical order
 		return formattedPlayers;
 	}
 }
