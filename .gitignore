@@ -24,3 +24,6 @@ hs_err_pid*
 
 # Ignore local directory in for classpath
 .classpath
+
+# Ignore compiled stuff directory
+bin
