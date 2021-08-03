@@ -4,10 +4,10 @@ This project is a program that sorts replays from skullgirls.
 # How it works
 The program will get all your replay files and put them in a folder based on the players names and when that replay was recorded.  
 
->If a player has an invalid character in nickname the replay will be placed in a folder named "Unkown Players"
-
 Example: A match played between SF and DS  
 - SF Vs DS(folder) -> date(folder) -> replay_files(.ini & .rnd)  
+
+>If a player has an invalid character in nickname the replay will be placed in a folder named "Unkown Players"
 
 # How to use
 Put the program inside your replay folder and run it.
