@@ -45,7 +45,7 @@ public class Main {
 			String[] nomes = getPlayersName(iniFile);
 			
 			createFolder(iniFile, nomes);
-			deleteFiles(iniFile);
+//			deleteFiles(iniFile);
 			
 			ProgressBar.next();
 			ProgressBar.setString(nomes[0]);
@@ -67,15 +67,23 @@ public class Main {
 		try {
 			new File(replaysFolderPath + concatedNames).mkdir(); //Create the players folder
 			new File(replaysFolderPath + concatedNames + datePath).mkdir(); //Create the date folder inside the players folder
-			copyFiles(iniFile, replaysFolderPath + concatedNames + datePath); //Copy replays files into date folder
+			copyFilesTest(iniFile, replaysFolderPath + concatedNames + datePath); //Copy replays files into date folder
 		} catch (InvalidPathException e) {
 			concatedNames = "Unknown Players";
 			new File(replaysFolderPath + concatedNames).mkdir();
 			new File(replaysFolderPath + concatedNames + datePath).mkdir();
-			copyFiles(iniFile, replaysFolderPath + concatedNames + datePath);
+			copyFilesTest(iniFile, replaysFolderPath + concatedNames + datePath);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected static void copyFilesTest(File iniFile, String dir) {
+		int roundNumber = new File(dir).list().length / 2 + 1;
+		String baseRoundFileName = String.format("round_%04d", roundNumber);
+		
+		new File(iniFile.getPath().replace(".ini", ".rnd")).renameTo(new File(dir + "\\" + baseRoundFileName + ".rnd")); //Moving the .rnd file to the dateDirectory(dir)
+		iniFile.renameTo(new File(dir + "\\" + baseRoundFileName + ".ini")); //Moving the .ini file to the dateDirectory(dir)
 	}
 	
 	protected static void copyFiles(File iniFile, String dir) throws IOException {
