@@ -84,9 +84,9 @@ public class Main {
 		java.util.List<String> lines = Files.readAllLines(file.toPath());
 		
 		players[0] = lines.get(lines.size()-3).substring(7);
-		players[1] = lines.get(lines.size()-4).substring(7);		
+		players[1] = lines.get(lines.size()-4).substring(7);
 		
-		return players;
+		return formatPlayersName(players);
 	}
 
 	protected static String[] formatPlayersName(String[] players) {
