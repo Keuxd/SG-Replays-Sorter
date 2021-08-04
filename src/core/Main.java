@@ -2,18 +2,14 @@ package core;
 
 import java.awt.HeadlessException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
-import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Scanner;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -45,7 +41,6 @@ public class Main {
 			String[] nomes = getPlayersName(iniFile);
 			
 			createFolder(iniFile, nomes);
-//			deleteFiles(iniFile);
 			
 			ProgressBar.next();
 			ProgressBar.setString(nomes[0]);
@@ -67,18 +62,16 @@ public class Main {
 		try {
 			new File(replaysFolderPath + concatedNames).mkdir(); //Create the players folder
 			new File(replaysFolderPath + concatedNames + datePath).mkdir(); //Create the date folder inside the players folder
-			copyFilesTest(iniFile, replaysFolderPath + concatedNames + datePath); //Copy replays files into date folder
-		} catch (InvalidPathException e) {
+			moveFiles(iniFile, replaysFolderPath + concatedNames + datePath); //Copy replays files into date folder
+		} catch (NullPointerException e) {
 			concatedNames = "Unknown Players";
 			new File(replaysFolderPath + concatedNames).mkdir();
 			new File(replaysFolderPath + concatedNames + datePath).mkdir();
-			copyFilesTest(iniFile, replaysFolderPath + concatedNames + datePath);
-		} catch (Exception e) {
-			e.printStackTrace();
+			moveFiles(iniFile, replaysFolderPath + concatedNames + datePath);
 		}
 	}
 	
-	protected static void copyFilesTest(File iniFile, String dir) {
+	protected static void moveFiles(File iniFile, String dir) throws NullPointerException {
 		int roundNumber = new File(dir).list().length / 2 + 1;
 		String baseRoundFileName = String.format("round_%04d", roundNumber);
 		
@@ -86,34 +79,16 @@ public class Main {
 		iniFile.renameTo(new File(dir + "\\" + baseRoundFileName + ".ini")); //Moving the .ini file to the dateDirectory(dir)
 	}
 	
-	protected static void copyFiles(File iniFile, String dir) throws IOException {
-		Files.copy(iniFile.toPath(), new File(dir + "\\" + iniFile.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
-		Files.copy(new File(iniFile.getPath().replace(".ini",".rnd")).toPath(), new File(dir + "\\" + iniFile.getName().replace(".ini",".rnd")).toPath(), StandardCopyOption.REPLACE_EXISTING);
-	}
-	
-	protected static void deleteFiles(File iniFile) throws IOException {
-		Files.delete(new File(iniFile.getPath().replace(".ini", ".rnd")).toPath());
-		Files.delete(iniFile.toPath());
-	}
-	
-	protected static String[] getPlayersName(File file) throws FileNotFoundException {
+	protected static String[] getPlayersName(File file) throws IOException {
 		String[] players = new String[2];
-		Scanner sc = new Scanner(file,"UTF-8");
-
-		for(int i = 0; i < 2; i++) {
-			while(sc.hasNextLine()) {
-				players[i] = sc.nextLine();
-				if(players[i].contains("P" + (i+1) + "Name")) {
-					players[i] = players[i].substring(7);
-					break;
-				}
-			}
-		}
+		java.util.List<String> lines = Files.readAllLines(file.toPath());
 		
-		sc.close();
-		return formatPlayersName(players);
+		players[0] = lines.get(lines.size()-3).substring(7);
+		players[1] = lines.get(lines.size()-4).substring(7);		
+		
+		return players;
 	}
-	
+
 	protected static String[] formatPlayersName(String[] players) {
 		String[] formattedPlayers = new String[2];
 		for(int i = 0; i < 2; i++) {
