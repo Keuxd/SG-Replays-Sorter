@@ -11,7 +11,7 @@ public class ProgressBar {
 	private static JLabel label;
 	private static int position;
 	
-	public static void initializeProgressBar(int maxFiles) {		
+	public static void initializeProgressBar(int maxFiles) {
 		progressBar = new JProgressBar(0, maxFiles);
 		progressBar.setBounds(40, 40, 157, 30);
 		progressBar.setValue(0);
@@ -33,12 +33,12 @@ public class ProgressBar {
 		position = 0;
 	}
 	
-	public static void next() {
+	protected static void next() {
 		position += 1;
 		progressBar.setValue(position);
 	}
 	
-	public static void setString(String string) {
+	protected static void setString(String string) {
 		label.setText(string);
 	}
 }
