@@ -7,7 +7,7 @@ The program will get all your replay files and put them ordered in a folder base
 Example: A match played between SF and DS  
 - DS Vs SF(folder) -> date(folder) -> replay_files(.ini & .rnd)  
 
->If a player has an invalid character in nickname the replay will be placed in a folder named "Unkown Players"
+>If a player has an invalid character in nickname the replay will be placed in a folder named "Unknown Players"
 
 # How to use
 Put the program inside your replay folder and run it.
